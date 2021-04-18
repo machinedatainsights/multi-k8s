@@ -20,6 +20,3 @@ after_success:
   - docker push machinedatainsights/multi-nginx
   - docker push machinedatainsights/multi-server
   - docker push machinedatainsights/multi-worker
-
-
-
