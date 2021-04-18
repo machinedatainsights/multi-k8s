@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t machinedatainsights/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run machinedatainsights/react-test npm test -- --coverage 
+
+after_success:
+  - docker build -t machinedatainsights/multi-client ./client
+  - docker build -t machinedatainsights/multi-nginx ./nginx
+  - docker build -t machinedatainsights/multi-server ./server
+  - docker build -t machinedatainsights/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+  # Take these images and push them to Docker Hub
+  - docker push machinedatainsights/multi-client 
+  - docker push machinedatainsights/multi-nginx
+  - docker push machinedatainsights/multi-server
+  - docker push machinedatainsights/multi-worker
+
+
+
